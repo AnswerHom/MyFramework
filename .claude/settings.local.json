@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Administrator/.codemoss/dependencies/claude-sdk/**)",
+      "Bash(npm cache:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
