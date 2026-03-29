@@ -1,22 +1,32 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Framework.Manager;
 using Luban;
 using UnityEngine;
 using YooAsset;
 
 namespace Framework.Config
 {
-    public class ConfigManager
+    public class ConfigManager:IManager
     {
+        public string Name => typeof(ConfigManager).Name;
+        
         private static cfg.Tables _tables;
+        public static cfg.Tables Tables => _tables;
         private static bool _isInitialized;
         private static readonly string ConfigPath = "Res/Data/Config/";
 
         // 缓存已加载的 bytes 数据，避免重复加载
         private static readonly Dictionary<string, byte[]> _cachedBytes = new Dictionary<string, byte[]>();
-
-        public static bool IsInitialized => _isInitialized;
+        
+        /// <summary>
+        /// 同步初始化（内部会异步执行）
+        /// </summary>
+        public void Init()
+        {
+            InitializeAsync().Forget();
+        }
 
         /// <summary>
         /// 初始化配置系统（异步）
@@ -48,29 +58,7 @@ namespace Framework.Config
 
             _isInitialized = true;
         }
-
-        /// <summary>
-        /// 同步初始化（内部会异步执行）
-        /// </summary>
-        public void Initialize()
-        {
-            if (_isInitialized)
-            {
-                return;
-            }
-
-            InitializeAsync().Forget();
-        }
-
-        /// <summary>
-        /// 获取 ItemTable
-        /// </summary>
-        public cfg.Base.ItemTable GetItemTable()
-        {
-            CheckInitialized();
-            return _tables.ItemTable;
-        }
-
+        
         /// <summary>
         /// 通用获取方法
         /// </summary>
@@ -96,8 +84,8 @@ namespace Framework.Config
             var tasks = new List<UniTask>();
 
             // base_itemtable
-            tasks.Add(LoadBytesAsync($"{ConfigPath}base_itemtable"));
-            tasks.Add(LoadBytesAsync($"{ConfigPath}base_itemtable_offset"));
+            tasks.Add(LoadBytesAsync($"base_itemtable"));
+            tasks.Add(LoadBytesAsync($"base_itemtable_offset"));
 
             // 如果有其他表，在这里添加...
 
@@ -126,7 +114,7 @@ namespace Framework.Config
 
         private ByteBuf LoadOffsetFromCache(string tableName)
         {
-            var path = $"{ConfigPath}{tableName}_offset";
+            var path = $"{tableName}_offset";
             if (!_cachedBytes.TryGetValue(path, out var bytes))
             {
                 throw new Exception($"Offset file not found in cache: {path}");
@@ -136,10 +124,9 @@ namespace Framework.Config
 
         private ByteBuf LoadByteBufFromCache(string tableName, int offset, int length)
         {
-            var path = $"{ConfigPath}{tableName}";
-            if (!_cachedBytes.TryGetValue(path, out var allBytes))
+            if (!_cachedBytes.TryGetValue(tableName, out var allBytes))
             {
-                throw new Exception($"Data file not found in cache: {path}");
+                throw new Exception($"Data file not found in cache: {tableName}");
             }
 
             // 从完整数据中切片指定范围
@@ -147,5 +134,12 @@ namespace Framework.Config
             Array.Copy(allBytes, offset, slice, 0, length);
             return new ByteBuf(slice);
         }
+
+        public void Dispose()
+        {
+            
+        }
+
+        
     }
 }

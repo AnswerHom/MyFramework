@@ -45,7 +45,14 @@
     <Analyzer Include="E:\TuanjieEditor\2022.3.62t5\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Framework\Manager\Interface\ILateUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\Manager\Interface\IUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\Manager\Interface\IManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Asset\YooAssetHelper.cs" />
+    <Compile Include="Assets\Scripts\Framework\Manager\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\Manager\ManagerDriver.cs" />
+    <Compile Include="Assets\Scripts\Framework\Manager\Interface\IFixedUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\BootConfig.cs" />
     <None Include="Assets\Scripts\Framework\Framework.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>E:\TuanjieEditor\2022.3.62t5\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

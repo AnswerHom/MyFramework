@@ -728,6 +728,10 @@
       <Project>{e4cf2e02-914c-9313-33b5-243323526743}</Project>
       <Name>UniTask</Name>
     </ProjectReference>
+    <ProjectReference Include="Framework.csproj">
+      <Project>{964d4e7c-e92b-0bfd-1e4f-34ce234d66f9}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -1,0 +1,44 @@
+{
+    "FileVersion": "2025.9.30",
+    "EnableAddressable": true,
+    "SupportExtensionless": false,
+    "LocationToLower": false,
+    "IncludeAssetGUID": false,
+    "ReplaceAssetPathWithAddress": false,
+    "OutputNameStyle": 0,
+    "BuildBundleType": 1,
+    "BuildPipeline": "EditorSimulateBuildPipeline",
+    "PackageName": "main",
+    "PackageVersion": "Simulate",
+    "PackageNote": "2026/3/30 0:21:26",
+    "AssetList": [
+        {
+            "Address": "base_itemtable",
+            "AssetPath": "Assets/Res/Data/Config/base/base_itemtable.bytes",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0,
+            "DependBundleIDs": []
+        },
+        {
+            "Address": "base_itemtable_offset",
+            "AssetPath": "Assets/Res/Data/Config/base/base_itemtable_offset.bytes",
+            "AssetGUID": "",
+            "AssetTags": [],
+            "BundleID": 0,
+            "DependBundleIDs": []
+        }
+    ],
+    "BundleList": [
+        {
+            "BundleName": "main_assets_res_data_config_base.bundle",
+            "UnityCRC": 0,
+            "FileHash": "203b98ab921b6853a8016e602557a9e8",
+            "FileCRC": 0,
+            "FileSize": 48,
+            "Encrypted": false,
+            "Tags": [],
+            "DependBundleIDs": []
+        }
+    ]
+}
