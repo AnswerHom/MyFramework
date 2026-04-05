@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using cfg.Base;
 using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Asset;
@@ -41,18 +42,36 @@ public class Boot : MonoBehaviour
             Debug.LogError($"YooAssetHelper.RequestPackageVersion失败：{versionTask.Error}");
             return;
         }
-        
-        var mainfestTask = YooAssetHelper.UpdatePackageManifest(bootConfig.assetPackageName,versionTask.PackageVersion);
+
+        var mainfestTask =
+            YooAssetHelper.UpdatePackageManifest(bootConfig.assetPackageName, versionTask.PackageVersion);
         await mainfestTask.ToUniTask();
         if (mainfestTask.Status != EOperationStatus.Succeed)
         {
             Debug.LogError($"YooAssetHelper.UpdatePackageManifest：{mainfestTask.Error}");
             return;
         }
-        
-        GameManager.Instance.Add(new ConfigManager());
 
-        // Debug.Log(ConfigManager.Tables.ItemTable.Get(1001).Name);
+        Game.Instance.Add(new ConfigManager());
+        
+        await PreloadConfig();
+
+        var item = ConfigManager.Tables.ItemTable.Get(1001);
+        Debug.Log(item.Name);
+    }
+
+
+    /// <summary>
+    /// 预加载数值
+    /// </summary>
+    /// <returns></returns>
+    UniTask PreloadConfig()
+    {
+        var task = new List<UniTask>();
+        var mgr = Game.Instance.Get<ConfigManager>();
+        task.Add(mgr.Load("base"));
+        
+        return UniTask.WhenAll(task);
     }
 
     // Update is called once per frame

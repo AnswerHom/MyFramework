@@ -18,9 +18,9 @@ namespace cfg
         public Base.ItemTable ItemTable {get; }
         public static readonly int TABLE_COUNT = 1;
 
-        public Tables(System.Func<string, ByteBuf> offsetLoader,  System.Func<string, int, int, ByteBuf> byteBufLoader)
+        public Tables(Framework.Config.IConfigLoader loader)
         {
-            ItemTable = new Base.ItemTable(offsetLoader("base_itemtable"), "base_itemtable", byteBufLoader);
+            ItemTable = new Base.ItemTable(loader, "base_itemtable", "base_itemtable_offset");
             ResolveRef();
         }
     
@@ -31,3 +31,4 @@ namespace cfg
     }
 
 }
+

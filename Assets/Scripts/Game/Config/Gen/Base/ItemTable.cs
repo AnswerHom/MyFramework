@@ -15,32 +15,35 @@ namespace cfg.Base
 {
     public partial class ItemTable
     {
-        private readonly System.Func<string, int, int, ByteBuf> _byteBufLoader;
+        private readonly Framework.Config.IConfigLoader _loader;
         private readonly string _fileName;
+        private readonly string _offsetFileName;
         private Tables _tables;
 
-        private readonly System.Collections.Generic.Dictionary<int, Base.Item> _dataMap;
-        private readonly System.Collections.Generic.Dictionary<int, int> _offsetMap;
-        private readonly System.Collections.Generic.Dictionary<int, int> _lengthMap;
+        private System.Collections.Generic.Dictionary<int, Base.Item> _dataMap;
+        private System.Collections.Generic.Dictionary<int, (int,int)> _offsetMap;
 
-        private readonly System.Collections.Generic.List<Base.Item> _dataList;
-    
-        public ItemTable(ByteBuf _buf,string fileName, System.Func<string, int, int, ByteBuf> byteBufLoader)
+        private System.Collections.Generic.List<Base.Item> _dataList;
+
+        public ItemTable(Framework.Config.IConfigLoader loader, string fileName, string offsetFileName)
         {
-            _dataMap = new System.Collections.Generic.Dictionary<int, Base.Item>();
-            _offsetMap = new System.Collections.Generic.Dictionary<int, int>();
-            _lengthMap = new System.Collections.Generic.Dictionary<int, int>();
+            _loader = loader;
             _fileName = fileName;
-            _byteBufLoader = byteBufLoader;
-        
-            for (int n = _buf.ReadSize(); n > 0; --n)
+            _offsetFileName = offsetFileName;
+        }
+
+        public bool ContainsKey(int key)
+        {
+            LoadOffset();
+            return _offsetMap.ContainsKey(key);
+        }
+
+        public System.Collections.Generic.Dictionary<int, (int,int)>.KeyCollection Keys
+        {
+            get
             {
-                int key;
-                key = _buf.ReadInt();
-                int offset = _buf.ReadInt();
-                int length = _buf.ReadInt();
-                _offsetMap.Add(key, offset);
-                _lengthMap.Add(key, length);
+                LoadOffset();
+                return _offsetMap.Keys;
             }
         }
 
@@ -59,13 +62,11 @@ namespace cfg.Base
         public Base.Item GetOrDefault(int key) => this.Get(key) ?? default;
         public Base.Item Get(int key)
         {
-            if (_dataMap.TryGetValue(key, out var v))
-            {
-                return v;
-            }
-            int offset = _offsetMap[key];
-            int length = _lengthMap[key];
-            ByteBuf buf = this._byteBufLoader(this._fileName, offset, length);
+            LoadOffset();
+            if (_dataMap.TryGetValue(key, out var v)) return v;
+            if (_offsetMap.TryGetValue(key, out var offsetTuple) == false) return null;
+            (int offset, int length) = offsetTuple;
+            var buf = _loader.LoadByteBuf(_fileName, offset, length);
             v = global::cfg.Base.Item.DeserializeItem(buf);;
             _dataMap[key] = v;
             v.ResolveRef(_tables);
@@ -78,6 +79,24 @@ namespace cfg.Base
             this._tables = tables;
         }
 
+        private void LoadOffset()
+        {
+            if(_dataMap != null) return;
+            var buf = _loader.LoadOffset(_offsetFileName);
+            var size = buf.ReadSize();
+            _offsetMap = new System.Collections.Generic.Dictionary<int, (int,int)>(size);
+            _dataMap = new System.Collections.Generic.Dictionary<int, Base.Item>(size);
+            for (int n = size; n > 0; --n)
+            {
+                int key;
+                key = buf.ReadInt();
+                int offset = buf.ReadInt();
+                int length = buf.ReadInt();
+                _offsetMap.Add(key, (offset, length));
+            }
+        }
+
     }
 
 }
+

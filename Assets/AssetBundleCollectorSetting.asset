@@ -27,7 +27,7 @@ MonoBehaviour:
     Groups:
     - GroupName: data
       GroupDesc: "\u6570\u503C"
-      AssetTags: 
+      AssetTags: data
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/Res/Data/Config

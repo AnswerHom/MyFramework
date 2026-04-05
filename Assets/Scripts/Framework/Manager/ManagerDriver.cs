@@ -12,17 +12,17 @@ namespace Framework.Manager
 
         private void Update()
         {
-            GameManager.Instance.OnUpdate(Time.deltaTime);
+            Game.Instance.OnUpdate(Time.deltaTime);
         }
 
         private void FixedUpdate()
         {
-            GameManager.Instance.OnFixedUpdate();
+            Game.Instance.OnFixedUpdate();
         }
 
         private void LateUpdate()
         {
-            GameManager.Instance.OnLateUpdate();
+            Game.Instance.OnLateUpdate();
         }
     }
 }

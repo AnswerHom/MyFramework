@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using cfg;
 using Cysharp.Threading.Tasks;
 using Framework.Manager;
 using Luban;
@@ -8,138 +9,99 @@ using YooAsset;
 
 namespace Framework.Config
 {
-    public class ConfigManager:IManager
+    public class ConfigManager:IManager,IConfigLoader
     {
         public string Name => typeof(ConfigManager).Name;
         
         private static cfg.Tables _tables;
         public static cfg.Tables Tables => _tables;
-        private static bool _isInitialized;
-        private static readonly string ConfigPath = "Res/Data/Config/";
 
-        // 缓存已加载的 bytes 数据，避免重复加载
-        private static readonly Dictionary<string, byte[]> _cachedBytes = new Dictionary<string, byte[]>();
+        //数值offset数据
+        private readonly Dictionary<string, ByteBuf> _offset = new(32);
+        //数值内容文件
+        private readonly Dictionary<string, ByteBuf> _bytes = new(32);
+        
         
         /// <summary>
         /// 同步初始化（内部会异步执行）
         /// </summary>
         public void Init()
         {
-            InitializeAsync().Forget();
+            _tables = new Tables(this);
         }
 
         /// <summary>
-        /// 初始化配置系统（异步）
+        /// 通过分组加载
         /// </summary>
-        public async UniTask InitializeAsync()
+        /// <param name="groupName"></param>
+        public async UniTask<bool> Load(string groupName)
         {
-            if (_isInitialized)
+            var assets = YooAssets.GetAssetInfos(new[] { "data" });
+            
+            //获得前缀资源
+            var prefix = $"{groupName}_";
+            AssetInfo targetInfo = null;
+            for (int i = 0; i < assets.Length; i++)
             {
-                return;
+                var info = assets[i];
+                if (assets[i].Address.StartsWith(prefix))
+                {
+                    targetInfo = info;
+                    break;
+                }
+            }
+            
+            //加载资源包
+            var handle = YooAssets.LoadAllAssetsSync(targetInfo);
+            await handle.ToUniTask();
+
+            if (handle.Status != EOperationStatus.Succeed)
+            {
+                Log.Dev($"[ConfigManager] 加载数值分组{groupName}失败，原因：{handle.LastError}", LogType.Error);
+                return false;
+            }
+            
+            //加载分组内所有资源到字典中
+            foreach (var obj in handle.AllAssetObjects)
+            {
+                var asset = obj as TextAsset;
+                string fileName = asset.name;
+                if (fileName.EndsWith("_offset"))
+                {
+                    _offset[fileName] = new ByteBuf(asset.bytes);
+                }
+                else
+                {
+                    _bytes[fileName] = new ByteBuf(asset.bytes);
+                }
             }
 
-            // 预加载所有配置数据到缓存
-            await PreloadAllConfigsAsync();
-
-            // 注册懒加载回调（从缓存读取，不再有IO操作）
-            var offsetLoaders = new Dictionary<string, Func<ByteBuf>>();
-            var byteBufLoaders = new Dictionary<string, Func<int, int, ByteBuf>>();
-
-            // 注册 base_itemtable 的加载器
-            offsetLoaders["base_itemtable"] = () => LoadOffsetFromCache("base_itemtable");
-            byteBufLoaders["base_itemtable"] = (offset, length) => LoadByteBufFromCache("base_itemtable", offset, length);
-
-            // 如果有其他表，在这里继续注册...
-
-            _tables = new cfg.Tables(
-                name => offsetLoaders[name](),
-                (name, offset, length) => byteBufLoaders[name](offset, length)
-            );
-
-            _isInitialized = true;
+            handle.Release();
+            return true;
         }
         
-        /// <summary>
-        /// 通用获取方法
-        /// </summary>
-        public T Get<T>(Func<cfg.Tables, T> getter) where T : class
+        public ByteBuf LoadOffset(string fileName)
         {
-            CheckInitialized();
-            return getter(_tables);
+            if (_offset.TryGetValue(fileName, out var buf))
+                return buf;
+            Log.Dev($"Cannot find config offset for fileName '{fileName}'", LogType.Error);
+            return null;
         }
 
-        private void CheckInitialized()
+        public ByteBuf LoadByteBuf(string fileName, int offset, int length)
         {
-            if (!_isInitialized)
+            if (_bytes.TryGetValue(fileName, out var buf) == false)
             {
-                throw new InvalidOperationException("ConfigManager is not initialized. Please call InitializeAsync() first.");
+                Log.Dev($"Cannot find config byte for fileName '{fileName}'", LogType.Error);
+                return null;
             }
+            buf.ReaderIndex = offset;
+            return buf;
         }
-
-        /// <summary>
-        /// 预加载所有配置文件到缓存
-        /// </summary>
-        private async UniTask PreloadAllConfigsAsync()
-        {
-            var tasks = new List<UniTask>();
-
-            // base_itemtable
-            tasks.Add(LoadBytesAsync($"base_itemtable"));
-            tasks.Add(LoadBytesAsync($"base_itemtable_offset"));
-
-            // 如果有其他表，在这里添加...
-
-            await UniTask.WhenAll(tasks);
-        }
-
-        private async UniTask LoadBytesAsync(string path)
-        {
-            if (_cachedBytes.ContainsKey(path))
-            {
-                return;
-            }
-
-            var handle = YooAssets.LoadAssetAsync<TextAsset>(path);
-            await handle;
-            var textAsset = handle.AssetObject as TextAsset;
-            if (textAsset == null)
-            {
-                throw new Exception($"Failed to load config file: {path}");
-            }
-
-            var bytes = textAsset.bytes;
-            _cachedBytes[path] = bytes;
-            handle.Release();
-        }
-
-        private ByteBuf LoadOffsetFromCache(string tableName)
-        {
-            var path = $"{tableName}_offset";
-            if (!_cachedBytes.TryGetValue(path, out var bytes))
-            {
-                throw new Exception($"Offset file not found in cache: {path}");
-            }
-            return new ByteBuf(bytes);
-        }
-
-        private ByteBuf LoadByteBufFromCache(string tableName, int offset, int length)
-        {
-            if (!_cachedBytes.TryGetValue(tableName, out var allBytes))
-            {
-                throw new Exception($"Data file not found in cache: {tableName}");
-            }
-
-            // 从完整数据中切片指定范围
-            var slice = new byte[length];
-            Array.Copy(allBytes, offset, slice, 0, length);
-            return new ByteBuf(slice);
-        }
-
+        
         public void Dispose()
         {
             
         }
-
-        
     }
 }

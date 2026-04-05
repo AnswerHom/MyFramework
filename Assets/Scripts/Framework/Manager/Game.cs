@@ -7,17 +7,17 @@ namespace Framework.Manager
     /// <summary>
     /// 游戏管理器仓库，用于管理游戏内所有管理器
     /// </summary>
-    public class GameManager
+    public class Game
     {
-        private static GameManager _instance;
+        private static Game _instance;
 
-        public static GameManager Instance
+        public static Game Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new GameManager();
+                    _instance = new Game();
                     _instance.Init();
                 }
 
@@ -44,6 +44,10 @@ namespace Framework.Manager
                 _driver = new GameObject("ManagerDriver").AddComponent<ManagerDriver>();
         }
 
+        /// <summary>
+        /// 添加管理器
+        /// </summary>
+        /// <param name="manager"></param>
         public void Add(IManager manager)
         {
             _managers.Add(manager);
@@ -51,6 +55,22 @@ namespace Framework.Manager
             if (manager is IFixedUpdateManager) _fixedUpdateList.Add(manager as IFixedUpdateManager);
             if (manager is ILateUpdateManager) _lateUpdateList.Add(manager as ILateUpdateManager);
             manager.Init();
+        }
+
+        /// <summary>
+        /// 获得管理器
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T Get<T>() where T : class, IManager
+        {
+            for (int i = 0; i < _managers.Count; i++)
+            {
+                var mgr = _managers[i];
+                if (mgr is T) return mgr as T;
+            }
+
+            return null;
         }
 
         #region Mono生命周期执行函数
