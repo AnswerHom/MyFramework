@@ -46,11 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\ILateUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\Manager\Game.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IUpdateManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Asset\YooAssetHelper.cs" />
-    <Compile Include="Assets\Scripts\Framework\Manager\GameManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\ManagerDriver.cs" />
+    <Compile Include="Assets\Scripts\Framework\Config\IConfigLoader.cs" />
+    <Compile Include="Assets\Scripts\Framework\Log\Log.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IFixedUpdateManager.cs" />
     <Compile Include="Assets\Scripts\Framework\BootConfig.cs" />
     <None Include="Assets\Scripts\Framework\Framework.asmdef" />
@@ -716,6 +718,9 @@
     </Reference>
     <Reference Include="YooAsset">
       <HintPath>E:\work\Framework\MyFramework\Library\ScriptAssemblies\YooAsset.dll</HintPath>
+    </Reference>
+    <Reference Include="Luban.Runtime">
+      <HintPath>E:\work\Framework\MyFramework\Library\ScriptAssemblies\Luban.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>E:\work\Framework\MyFramework\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
