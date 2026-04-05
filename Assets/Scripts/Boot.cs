@@ -9,6 +9,7 @@ using Framework.Config;
 using Framework.Manager;
 using UnityEngine;
 using YooAsset;
+using LogType = Framework.LogType;
 
 public class Boot : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class Boot : MonoBehaviour
 
         if (yooAssetTask.Status != EOperationStatus.Succeed)
         {
-            Debug.LogError($"YooAssetHelper.InitPackage初始化失败：{yooAssetTask.Error}");
+            Log.Dev($"YooAssetHelper.InitPackage初始化失败：{yooAssetTask.Error}", LogType.Error);
             return;
         }
 
@@ -39,7 +40,7 @@ public class Boot : MonoBehaviour
         await versionTask.ToUniTask();
         if (versionTask.Status != EOperationStatus.Succeed)
         {
-            Debug.LogError($"YooAssetHelper.RequestPackageVersion失败：{versionTask.Error}");
+            Log.Dev($"YooAssetHelper.RequestPackageVersion失败：{versionTask.Error}", LogType.Error);
             return;
         }
 
@@ -48,7 +49,7 @@ public class Boot : MonoBehaviour
         await mainfestTask.ToUniTask();
         if (mainfestTask.Status != EOperationStatus.Succeed)
         {
-            Debug.LogError($"YooAssetHelper.UpdatePackageManifest：{mainfestTask.Error}");
+            Log.Dev($"YooAssetHelper.UpdatePackageManifest：{mainfestTask.Error}", LogType.Error);
             return;
         }
 
@@ -57,7 +58,7 @@ public class Boot : MonoBehaviour
         await PreloadConfig();
 
         var item = ConfigManager.Tables.ItemTable.Get(1001);
-        Debug.Log(item.Name);
+        Log.Dev(item.Name);
     }
 
 
