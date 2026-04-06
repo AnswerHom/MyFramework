@@ -16,17 +16,25 @@ namespace cfg
         
         
         public Base.ItemTable ItemTable {get; }
-        public static readonly int TABLE_COUNT = 1;
+        
+        public Base.UITemplateTable UITemplateTable {get; }
+        
+        public Battle.AttributeTable AttributeTable {get; }
+        public static readonly int TABLE_COUNT = 3;
 
         public Tables(Framework.Config.IConfigLoader loader)
         {
             ItemTable = new Base.ItemTable(loader, "base_itemtable", "base_itemtable_offset");
+            UITemplateTable = new Base.UITemplateTable(loader, "base_uitemplatetable", "base_uitemplatetable_offset");
+            AttributeTable = new Battle.AttributeTable(loader, "battle_attributetable", "battle_attributetable_offset");
             ResolveRef();
         }
     
         private void ResolveRef()
         {
             ItemTable.ResolveRef(this);
+            UITemplateTable.ResolveRef(this);
+            AttributeTable.ResolveRef(this);
         }
     }
 

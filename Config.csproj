@@ -48,7 +48,11 @@
     <Compile Include="Assets\Scripts\Game\Config\Gen\Base\Item.cs" />
     <Compile Include="Assets\Scripts\Game\Config\ConfigManager.cs" />
     <Compile Include="Assets\Scripts\Game\Config\Gen\Tables.cs" />
+    <Compile Include="Assets\Scripts\Game\Config\Gen\Battle\Attribute.cs" />
+    <Compile Include="Assets\Scripts\Game\Config\Gen\Base\UITemplate.cs" />
     <Compile Include="Assets\Scripts\Game\Config\Gen\Base\ItemTable.cs" />
+    <Compile Include="Assets\Scripts\Game\Config\Gen\Base\UITemplateTable.cs" />
+    <Compile Include="Assets\Scripts\Game\Config\Gen\Battle\AttributeTable.cs" />
     <None Include="Assets\Scripts\Game\Config\Config.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>E:\TuanjieEditor\2022.3.62t5\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
