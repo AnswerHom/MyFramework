@@ -77,9 +77,4 @@ public class Boot : MonoBehaviour
         
         return UniTask.WhenAll(task);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 }

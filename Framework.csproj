@@ -54,6 +54,7 @@
     <Compile Include="Assets\Scripts\Framework\Config\IConfigLoader.cs" />
     <Compile Include="Assets\Scripts\Framework\Log\Log.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IFixedUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\Config\ConfigLoader.cs" />
     <Compile Include="Assets\Scripts\Framework\BootConfig.cs" />
     <None Include="Assets\Scripts\Framework\Framework.asmdef" />
     <Reference Include="UnityEngine">
