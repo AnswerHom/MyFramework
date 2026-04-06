@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask", "UniTask.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FairyGUI", "FairyGUI.csproj", "{59494fb3-31d8-e467-84ad-9d1faf5c0026}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{7f2a619b-b3ac-6072-264f-c8c47f70762e}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Framework.csproj", "{964d4e7c-e92b-0bfd-1e4f-34ce234d66f9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FairyGUI-Editor", "FairyGUI-Editor.csproj", "{dccea6d8-70cf-665a-1f2e-98a4dffa323b}"
@@ -38,6 +40,8 @@ Global
 		{e4cf2e02-914c-9313-33b5-243323526743}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59494fb3-31d8-e467-84ad-9d1faf5c0026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59494fb3-31d8-e467-84ad-9d1faf5c0026}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7f2a619b-b3ac-6072-264f-c8c47f70762e}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7f2a619b-b3ac-6072-264f-c8c47f70762e}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{964d4e7c-e92b-0bfd-1e4f-34ce234d66f9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{964d4e7c-e92b-0bfd-1e4f-34ce234d66f9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{dccea6d8-70cf-665a-1f2e-98a4dffa323b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

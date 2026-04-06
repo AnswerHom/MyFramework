@@ -57,8 +57,10 @@ public class Boot : MonoBehaviour
         
         await PreloadConfig();
 
-        var item = ConfigManager.Tables.ItemTable.Get(1001);
-        Log.Dev(item.Name);
+        foreach (var key in ConfigManager.Tables.AttributeTable.Keys)
+        {
+            Log.Dev(ConfigManager.Tables.AttributeTable.Get(key).Name);
+        }
     }
 
 
@@ -71,6 +73,7 @@ public class Boot : MonoBehaviour
         var task = new List<UniTask>();
         var mgr = Game.Instance.Get<ConfigManager>();
         task.Add(mgr.Load("base"));
+        task.Add(mgr.Load("battle"));
         
         return UniTask.WhenAll(task);
     }
