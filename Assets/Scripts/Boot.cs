@@ -7,6 +7,7 @@ using Framework;
 using Framework.Asset;
 using Framework.Config;
 using Framework.Manager;
+using Framework.UI;
 using UnityEngine;
 using YooAsset;
 using LogType = Framework.LogType;
@@ -53,16 +54,20 @@ public class Boot : MonoBehaviour
             return;
         }
 
-        Game.Instance.Add(new ConfigManager());
-        
-        await PreloadConfig();
 
-        foreach (var key in ConfigManager.Tables.AttributeTable.Keys)
-        {
-            Log.Dev(ConfigManager.Tables.AttributeTable.Get(key).Name);
-        }
+        RegisterManager();
+        await PreloadConfig();
+        
     }
 
+    /// <summary>
+    /// 注册管理器
+    /// </summary>
+    void RegisterManager()
+    {
+        Game.Instance.Add<ConfigManager>().Init();
+        Game.Instance.Add<UIDialogManager>();
+    }
 
     /// <summary>
     /// 预加载数值

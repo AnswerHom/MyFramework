@@ -5,7 +5,7 @@ using UnityEngine.PlayerLoop;
 namespace Framework.Manager
 {
     /// <summary>
-    /// 游戏管理器仓库，用于管理游戏内所有管理器
+    /// 游戏管理器仓库，用于管理游戏内所有单例管理器
     /// </summary>
     public class Game
     {
@@ -48,13 +48,15 @@ namespace Framework.Manager
         /// 添加管理器
         /// </summary>
         /// <param name="manager"></param>
-        public void Add(IManager manager)
+        public T Add<T>() where T : class, IManager, new()
         {
+            if (Contain<T>()) return Get<T>();
+            T manager = new();
             _managers.Add(manager);
             if (manager is IUpdateManager) _updateList.Add(manager as IUpdateManager);
             if (manager is IFixedUpdateManager) _fixedUpdateList.Add(manager as IFixedUpdateManager);
             if (manager is ILateUpdateManager) _lateUpdateList.Add(manager as ILateUpdateManager);
-            manager.Init();
+            return manager;
         }
 
         /// <summary>
@@ -71,6 +73,22 @@ namespace Framework.Manager
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 是否有管理器
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool Contain<T>() where T : class, IManager
+        {
+            for (int i = 0; i < _managers.Count; i++)
+            {
+                var mgr = _managers[i];
+                if (mgr is T) return true;
+            }
+
+            return false;
         }
 
         #region Mono生命周期执行函数

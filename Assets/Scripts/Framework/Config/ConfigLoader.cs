@@ -7,7 +7,7 @@ using YooAsset;
 namespace Framework.Config
 {
     /// <summary>
-    /// 数值加载器
+    /// 数值加载器(懒加载)
     /// </summary>
     public class ConfigLoader:IConfigLoader
     {

@@ -50,10 +50,13 @@
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IUpdateManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Asset\YooAssetHelper.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\UIDialog.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\UIDialogManager.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\ManagerDriver.cs" />
     <Compile Include="Assets\Scripts\Framework\Config\IConfigLoader.cs" />
     <Compile Include="Assets\Scripts\Framework\Log\Log.cs" />
     <Compile Include="Assets\Scripts\Framework\Manager\Interface\IFixedUpdateManager.cs" />
+    <Compile Include="Assets\Scripts\Framework\UI\UIConfig.cs" />
     <Compile Include="Assets\Scripts\Framework\Config\ConfigLoader.cs" />
     <Compile Include="Assets\Scripts\Framework\BootConfig.cs" />
     <None Include="Assets\Scripts\Framework\Framework.asmdef" />
@@ -734,6 +737,10 @@
     <ProjectReference Include="UniTask.csproj">
       <Project>{e4cf2e02-914c-9313-33b5-243323526743}</Project>
       <Name>UniTask</Name>
+    </ProjectReference>
+    <ProjectReference Include="FairyGUI.csproj">
+      <Project>{59494fb3-31d8-e467-84ad-9d1faf5c0026}</Project>
+      <Name>FairyGUI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

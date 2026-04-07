@@ -135,6 +135,7 @@
     <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\Utils\Html\HtmlSelect.cs" />
     <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\Core\Mesh\FillMesh.cs" />
     <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\Core\Mesh\MeshFactory.cs" />
+    <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\Extensions\Common\UIPackageItemAttribute.cs" />
     <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\UI\FieldTypes.cs" />
     <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\UI\IUISource.cs" />
     <Compile Include="Assets\Scripts\!Lib\FairyGUI\Scripts\UI\UIPanel.cs" />
